@@ -58,7 +58,13 @@ namespace Genki
             var resultTasks = _options.Steps
                 .Select(t => _serviceProvider
                     .GetService(t) as IHealthCheckStep)
-                .Select(s => s.GetHealthAsync());
+                .Select(async s => new HealthCheckStepResponse
+                {
+                    Name = s.Name,
+                    Description = s.Description,
+                    Importance = s.Importance,
+                    IsHealthy = await s.GetIsHealthyAsync()
+                });
 
             var results = await Task.WhenAll(resultTasks);
 

@@ -10,17 +10,9 @@ namespace Genki
             return builder.UseMiddleware<Genki>();
         }
 
-        public static IServiceCollection AddGenki(
-            this IServiceCollection serviceCollection, GenkiOptions config)
+        public static GenkiOptionsBuilder AddGenki(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton(x => config);
-
-            foreach(var step in config.Steps)
-            {
-                serviceCollection.AddScoped(step);
-            }
-            
-            return serviceCollection;
+            return new GenkiOptionsBuilder(serviceCollection);
         }
     }
 }

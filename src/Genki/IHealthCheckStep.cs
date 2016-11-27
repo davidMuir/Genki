@@ -7,6 +7,6 @@ namespace Genki
         string Name { get; }
         string Description { get; }
         Importance Importance { get; }
-        Task<HealthCheckStepResponse> GetHealthAsync();
+        Task<bool> GetIsHealthyAsync();
     }
 }
