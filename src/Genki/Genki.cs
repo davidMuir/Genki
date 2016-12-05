@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -55,12 +54,13 @@ namespace Genki
         /// <param name="context">The context for the current request</param>
         public async Task Invoke(HttpContext context)
         {
-            var endpoint = GetEndpoint();
+            var endpoint = _options.GetEndpoint();
 
             // only respond to requests that start with our endpoint
             if (context.Request.Path.StartsWithSegments(endpoint))
             {
-                var healthResponse = await GetHealthAsync();
+                var healthResponse = await _options
+                    .GetHealthResponseAsync(_serviceProvider);
 
                 var serializer = GetSerializer();
 
@@ -77,60 +77,6 @@ namespace Genki
             }
 
             await _next.Invoke(context);
-        }
-
-        /// <summary>
-        /// Runs all of the health check steps that are defined in our options
-        /// and returns a response object that we can send
-        /// </summary>
-        /// <returns>The response object containing the health of our service</returns> 
-        private async Task<HealthCheckResponse> GetHealthAsync()
-        {
-            // Run through our health check steps
-            var resultTasks = _options.Steps
-                .Select(t => _serviceProvider
-                    
-                    // Get the service corresponding to the type we have stored
-                    .GetService(t) as IHealthCheckStep)
-                
-                // For each step create an object containing the details and the result 
-                .Select(async s => new HealthCheckStepResponse
-                {
-                    Name = s.Name,
-                    Description = s.Description,
-                    Importance = s.Importance,
-                    IsHealthy = await s.GetIsHealthyAsync()
-                });
-
-            // Get completed results
-            var results = await Task.WhenAll(resultTasks);
-
-            return new HealthCheckResponse
-            {
-                Service = _options.ServiceName,
-                Steps = results
-            };
-        }
-
-        /// <summary>
-        /// Gets the endpoint that we will respond to requests on
-        /// </summary>
-        /// <returns>The endpoint that we will respond to requests on</return>
-        private string GetEndpoint()
-        {
-            // Get either the endpoint defined by the options or the DefaultEndpoint
-            // if none is specified
-            var endpoint = string.IsNullOrEmpty(_options.Endpoint) ?
-                DefaultEndpoint : _options.Endpoint;
-
-            // if the endpoint starts with / then return as we can use as is
-            if (endpoint.StartsWith("/"))
-            {
-                return endpoint;
-            }
-
-            // Return our endpoint with a / at the start
-            return $"/{endpoint}";
         }
 
         /// <summary>
