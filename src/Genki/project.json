@@ -8,9 +8,7 @@
   },
 
   "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
-    }
+    "netstandard1.3": { }
   },
 
   "tooling": {
