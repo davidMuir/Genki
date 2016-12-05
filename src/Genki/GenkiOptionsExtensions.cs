@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace Genki
 {
+    /// <summary>
+    /// Extension methods to allow use of <see cref="GenkiOptions" /> 
+    /// separate from <see cref="Genki" /> to allow for easier testing
+    /// </summary>
     public static class GenkiOptionsExtensions
     {
         private const string DefaultEndpoint = "/health";
