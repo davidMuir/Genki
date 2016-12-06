@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/davidMuir/Genki.svg?branch=master)](https://travis-ci.org/davidMuir/Genki)
+
 # Genki
 
 Provides a way to define healthchecks for a .Net Core MVC app
