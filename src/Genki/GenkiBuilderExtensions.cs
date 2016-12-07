@@ -20,7 +20,7 @@ namespace Genki
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseMiddleware<Genki>();
+            return builder.UseMiddleware<GenkiMiddleware>();
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Genki
 {
-    public class Genki
+    public class GenkiMiddleware
     {
 
         private readonly IServiceProvider _serviceProvider;
@@ -22,7 +22,7 @@ namespace Genki
         /// <param name="next">The delegate representing the next middleware in the request pipeline</param>
         /// <param name="options">The middleware options</param>
         /// <param name="serviceProvider">The provider for retrieving a service object</param>
-        public Genki(
+        public GenkiMiddleware(
             RequestDelegate next, 
             GenkiOptions options, 
             IServiceProvider serviceProvider)
