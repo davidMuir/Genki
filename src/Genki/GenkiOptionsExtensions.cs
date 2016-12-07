@@ -41,12 +41,16 @@ namespace Genki
         public static async Task<HealthCheckResponse> GetHealthResponseAsync(
             this GenkiOptions options, IServiceProvider serviceProvider)
         {
+            if (serviceProvider == null)
+            {
+                throw new ArgumentNullException(nameof(serviceProvider));
+            }
+
             // Run through our health check steps
             var resultTasks = options.Steps
-                .Select(t => serviceProvider
-                    
-                    // Get the service corresponding to the type we have stored
-                    .GetService(t) as IHealthCheckStep)
+            
+                // Get the step corresponding to the type we have stored
+                .Select(t => serviceProvider.GetHealthCheckStep(t))
                 
                 // For each step create an object containing the details and the result 
                 .Select(async s => new HealthCheckStepResponse
