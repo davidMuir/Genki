@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -17,24 +16,51 @@ namespace Genki
         private readonly GenkiOptions _options;
         private const string DefaultEndpoint = "/health";
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Genki" />
+        /// </summary>
+        /// <param name="next">The delegate representing the next middleware in the request pipeline</param>
+        /// <param name="options">The middleware options</param>
+        /// <param name="serviceProvider">The provider for retrieving a service object</param>
         public Genki(
             RequestDelegate next, 
             GenkiOptions options, 
             IServiceProvider serviceProvider)
         {
+            if (next == null)
+            {
+                throw new ArgumentNullException(nameof(next));
+            }
+
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (serviceProvider == null)
+            {
+                throw new ArgumentNullException(nameof(serviceProvider));
+            }
+
             _next = next;
             _options = options;
             _serviceProvider = serviceProvider;
+
         }
 
+        /// <summary>
+        /// Executes the middleware
+        /// </summary>
+        /// <param name="context">The context for the current request</param>
         public async Task Invoke(HttpContext context)
         {
-            var endpoint = string.IsNullOrEmpty(_options.Endpoint) ?
-                DefaultEndpoint : _options.Endpoint;
+            var endpoint = _options.GetEndpoint();
 
+            // only respond to requests that start with our endpoint
             if (context.Request.Path.StartsWithSegments(endpoint))
             {
-                var healthResponse = await GetHealthAsync();
+                var healthResponse = await _options
+                    .GetHealthResponseAsync(_serviceProvider);
 
                 var serializer = GetSerializer();
 
@@ -53,32 +79,18 @@ namespace Genki
             await _next.Invoke(context);
         }
 
-        private async Task<HealthCheckResponse> GetHealthAsync()
-        {
-            var resultTasks = _options.Steps
-                .Select(t => _serviceProvider
-                    .GetService(t) as IHealthCheckStep)
-                .Select(async s => new HealthCheckStepResponse
-                {
-                    Name = s.Name,
-                    Description = s.Description,
-                    Importance = s.Importance,
-                    IsHealthy = await s.GetIsHealthyAsync()
-                });
-
-            var results = await Task.WhenAll(resultTasks);
-
-            return new HealthCheckResponse
-            {
-                Service = _options.ServiceName,
-                Steps = results
-            };
-        }
-
+        /// <summary>
+        /// Creates and returns a JsonSerializer for us to serialize our result
+        /// </summary>
+        /// <remarks>
+        /// Would be preferable if we could use one already defined in the project
+        /// </remarks>
+        /// <returns>A serializer for our response</returns>
         private static JsonSerializer GetSerializer()
         {
             var Serializer = new JsonSerializer();
 
+            // Create settings to match the defaults for dotnet core mvc
             Serializer.Converters.Add(new StringEnumConverter(true));
             Serializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
