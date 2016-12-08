@@ -48,11 +48,13 @@ public class MyStep : IHealthCheckStep
 
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddGenki()
-        .SetServiceName("My Web Service")
-        .SetEndpoint("/genki")
-        .AddStep<MyStep>()
-        .Build();
+    services
+        .AddGenki(options =>
+        {
+            options.ServiceName = "My Web Service";
+            options.Endpoint = "/genki";
+        })
+        .AddStep<MyStep>();
 }
 
 public void Configure(IApplicationBuilder app)
