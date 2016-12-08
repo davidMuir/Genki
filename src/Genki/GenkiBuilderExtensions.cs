@@ -27,17 +27,42 @@ namespace Genki
         /// Adds Genki to the DI container, giving us another builder to attach custom health checks
         /// </summary>
         /// <param name="serviceCollection">A collection of service descriptors</param>
-        /// <returns>
-        /// A new instance of <see cref="GenkiOptionsBuilder"/> to add custom health checks and details to
-        /// </returns>
-        public static GenkiOptionsBuilder AddGenki(this IServiceCollection serviceCollection)
+        /// <param name="options">Options for the health check</param>
+        public static IServiceCollection AddGenki(
+            this IServiceCollection serviceCollection, Action<GenkiOptions> options)
         {
             if (serviceCollection == null)
             {
                 throw new ArgumentNullException(nameof(serviceCollection));
             }
 
-            return new GenkiOptionsBuilder(serviceCollection);
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            var genkiOptions = new GenkiOptions();
+
+            // Set up our options
+            options(genkiOptions);
+
+            // Add to service collection
+            serviceCollection.AddSingleton(genkiOptions);
+
+            return serviceCollection;
+        }
+
+        /// <summary>
+        /// Adds a health check step to DI
+        /// </summary>
+        /// <param name="serviceCollection">A collection of service descriptors</param>
+        public static IServiceCollection AddHealthCheckStep<T>(
+            this IServiceCollection serviceCollection) where T : class, IHealthCheckStep
+        {
+            // Add the health check to DI
+            serviceCollection.AddScoped<IHealthCheckStep, T>();
+
+            return serviceCollection;
         }
     }
 }

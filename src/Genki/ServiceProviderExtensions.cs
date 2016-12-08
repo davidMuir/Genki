@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Genki
 {
@@ -11,20 +13,12 @@ namespace Genki
         /// <returns>
         /// <see cref="IHealthCheckStep" /> as resolved from the serviceProvider
         /// </returns>
-        public static IHealthCheckStep GetHealthCheckStep(
-            this IServiceProvider serviceProvider, Type type)
+        public static IEnumerable<IHealthCheckStep> GetHealthCheckSteps(
+            this IServiceProvider serviceProvider)
         {
-            // Get the step from the service provider
-            var step = serviceProvider.GetService(type);
+            var steps = serviceProvider.GetServices<IHealthCheckStep>();
 
-            // Throw if we can't resolve the step
-            if (step == null)
-            {
-                throw new Exception("Couldn't resolve HealthCheck");
-            }
-
-            // Attempt to cast and return step
-            return (IHealthCheckStep) step;
+            return steps;            
         }
     }
 }

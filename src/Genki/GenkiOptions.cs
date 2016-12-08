@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Genki
 {
     /// <summary>
@@ -17,11 +14,5 @@ namespace Genki
         /// The endpoint that we want to listen to requests on
         /// </summary>
         public string Endpoint { get; set; }
-
-        /// <summary>
-        /// A collection of the types of the custom health checks.
-        /// We will retrieve the health check for these types from DI on each request
-        /// </summary>
-        public IEnumerable<Type> Steps { get; set; }
     }
 }
