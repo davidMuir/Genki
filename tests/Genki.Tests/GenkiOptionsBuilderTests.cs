@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -10,11 +9,12 @@ namespace Genki.Tests
         public void GenkiOptionsBuilder_Will_AddOptionsToServiceProvider()
         {
             var serviceCollection = new ServiceCollection();
-            var serviceProvider = serviceCollection.AddGenki()
-                .SetServiceName("TestService")
-                .SetEndpoint("/test")
-                .AddStep<TestStep>()
-                .Build()
+            var serviceProvider = serviceCollection.AddGenki(o =>
+            {
+                o.ServiceName = "TestService";
+                o.Endpoint = "/test";
+            })
+                .AddHealthCheckStep<TestStep>()
                 .BuildServiceProvider();
 
             var options = serviceProvider.GetService<GenkiOptions>();
@@ -23,7 +23,6 @@ namespace Genki.Tests
 
             Assert.True(options.ServiceName == "TestService");
             Assert.True(options.Endpoint == "/test");
-            Assert.True(options.Steps.Count() == 1);
         }
     }
 }

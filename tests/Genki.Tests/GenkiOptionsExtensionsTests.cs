@@ -29,20 +29,17 @@ namespace Genki.Tests
         [Fact]
         public async Task GetHealthResponseAsync_Will_RetrieveStepsFromServiceProvider()
         {
-            // Set up
-            var options = new GenkiOptions
-            {
-                Steps = new List<Type>
-                {
-                    typeof(TestStep)
-                }
-            };
-
+            
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton<TestStep>();
-            serviceCollection.AddSingleton(x => options);
+            serviceCollection.AddGenki(o =>
+            {
+                o.ServiceName = "TestStep";
+            })
+            .AddHealthCheckStep<TestStep>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            var options = serviceProvider.GetService<GenkiOptions>();
 
             var response = await options
                 .GetHealthResponseAsync(serviceProvider);
