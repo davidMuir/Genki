@@ -47,10 +47,7 @@ namespace Genki
             }
 
             // Run through our health check steps
-            var resultTasks = options.Steps
-            
-                // Get the step corresponding to the type we have stored
-                .Select(t => serviceProvider.GetHealthCheckStep(t))
+            var resultTasks = serviceProvider.GetHealthCheckSteps()
                 
                 // For each step create an object containing the details and the result 
                 .Select(async s => new HealthCheckStepResponse
