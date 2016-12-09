@@ -54,7 +54,7 @@ public void ConfigureServices(IServiceCollection services)
             options.ServiceName = "My Web Service";
             options.Endpoint = "/genki";
         })
-        .AddStep<MyStep>();
+        .AddHealthCheckStep<MyStep>();
 }
 
 public void Configure(IApplicationBuilder app)
