@@ -12,7 +12,7 @@
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
     "Microsoft.Extensions.Configuration.CommandLine": "1.0.0",
-    "Genki": "1.0.0"
+    "Genki": "0.7.0"
   },
 
   "tools": {
