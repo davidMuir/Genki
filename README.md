@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/davidMuir/Genki.svg?branch=master)](https://travis-ci.org/davidMuir/Genki)
+[![NuGet](https://img.shields.io/nuget/v/Genki.svg?style=flat&label=nuget)](https://www.nuget.org/packages/Genki/)
 
 # Genki
 
