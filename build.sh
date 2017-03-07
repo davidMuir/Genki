@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
 # Clean up old artifacts
-rm -r **/*/bin/
-rm -r **/*/obj/
+dotnet clean
 
 # Restore dependencies
 dotnet restore
 
 # Build projects
-dotnet build **/project.json
+dotnet build
 
 # Run tests
-dotnet test ./tests/**/
+dotnet test ./tests/*/*.csproj
