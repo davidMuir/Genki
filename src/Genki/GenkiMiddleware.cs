@@ -64,7 +64,10 @@ namespace Genki
 
                 var serializer = GetSerializer();
 
-                context.Response.StatusCode = 200;
+                context.Response.StatusCode = healthResponse.IsHealthy
+                    ? StatusCodes.Status200OK
+                    : StatusCodes.Status503ServiceUnavailable;
+                    
                 context.Response.Headers.Add("Content-Type", "application/json");
 
                 using (var sw = new StreamWriter(context.Response.Body))
