@@ -14,7 +14,6 @@ namespace Genki
         private readonly IServiceProvider _serviceProvider;
         private readonly RequestDelegate _next;
         private readonly GenkiOptions _options;
-        private const string DefaultEndpoint = "/health";
 
         /// <summary>
         /// Creates a new instance of <see cref="Genki" />
@@ -27,25 +26,9 @@ namespace Genki
             GenkiOptions options, 
             IServiceProvider serviceProvider)
         {
-            if (next == null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
-
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            _next = next;
-            _options = options;
-            _serviceProvider = serviceProvider;
-
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         /// <summary>
@@ -85,9 +68,6 @@ namespace Genki
         /// <summary>
         /// Creates and returns a JsonSerializer for us to serialize our result
         /// </summary>
-        /// <remarks>
-        /// Would be preferable if we could use one already defined in the project
-        /// </remarks>
         /// <returns>A serializer for our response</returns>
         private static JsonSerializer GetSerializer()
         {

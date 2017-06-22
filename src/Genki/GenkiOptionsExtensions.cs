@@ -20,16 +20,15 @@ namespace Genki
         {
             // Get either the endpoint defined by the options or the DefaultEndpoint
             // if none is specified
-            var endpoint = string.IsNullOrEmpty(options.Endpoint) ?
-                DefaultEndpoint : options.Endpoint;
+            var endpoint = string.IsNullOrEmpty(options.Endpoint)
+                ? DefaultEndpoint
+                : options.Endpoint;
 
-            // if the endpoint starts with / then return as we can use as is
             if (endpoint.StartsWith("/"))
             {
                 return endpoint;
             }
 
-            // Return our endpoint with a / at the start
             return $"/{endpoint}";
         }
 
@@ -46,10 +45,7 @@ namespace Genki
                 throw new ArgumentNullException(nameof(serviceProvider));
             }
 
-            // Run through our health check steps
             var resultTasks = serviceProvider.GetHealthCheckSteps()
-                
-                // For each step create an object containing the details and the result 
                 .Select(async s => new HealthCheckStepResponse
                 {
                     Name = s.Name,
@@ -58,7 +54,6 @@ namespace Genki
                     IsHealthy = await s.GetIsHealthyAsync()
                 });
 
-            // Get completed results
             var results = await Task.WhenAll(resultTasks);
 
             return new HealthCheckResponse

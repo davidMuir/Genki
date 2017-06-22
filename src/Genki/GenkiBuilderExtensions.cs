@@ -43,10 +43,8 @@ namespace Genki
 
             var genkiOptions = new GenkiOptions();
 
-            // Set up our options
             options(genkiOptions);
 
-            // Add to service collection
             serviceCollection.AddSingleton(genkiOptions);
 
             return serviceCollection;
@@ -59,7 +57,6 @@ namespace Genki
         public static IServiceCollection AddHealthCheckStep<T>(
             this IServiceCollection serviceCollection) where T : class, IHealthCheckStep
         {
-            // Add the health check to DI
             serviceCollection.AddScoped<IHealthCheckStep, T>();
 
             return serviceCollection;
