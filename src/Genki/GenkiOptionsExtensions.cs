@@ -20,8 +20,9 @@ namespace Genki
         {
             // Get either the endpoint defined by the options or the DefaultEndpoint
             // if none is specified
-            var endpoint = string.IsNullOrEmpty(options.Endpoint) ?
-                DefaultEndpoint : options.Endpoint;
+            var endpoint = string.IsNullOrEmpty(options.Endpoint)
+                ? DefaultEndpoint
+                : options.Endpoint;
 
             // if the endpoint starts with / then return as we can use as is
             if (endpoint.StartsWith("/"))
