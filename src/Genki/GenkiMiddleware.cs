@@ -68,9 +68,6 @@ namespace Genki
         /// <summary>
         /// Creates and returns a JsonSerializer for us to serialize our result
         /// </summary>
-        /// <remarks>
-        /// Would be preferable if we could use one already defined in the project
-        /// </remarks>
         /// <returns>A serializer for our response</returns>
         private static JsonSerializer GetSerializer()
         {
