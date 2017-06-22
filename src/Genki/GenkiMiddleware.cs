@@ -14,7 +14,6 @@ namespace Genki
         private readonly IServiceProvider _serviceProvider;
         private readonly RequestDelegate _next;
         private readonly GenkiOptions _options;
-        private const string DefaultEndpoint = "/health";
 
         /// <summary>
         /// Creates a new instance of <see cref="Genki" />
